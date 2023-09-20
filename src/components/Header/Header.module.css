@@ -1,0 +1,73 @@
+.wrapper {
+  padding: 5px;
+  background-color: var(--main-blue);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.priceInfoWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.price {
+  align-self: flex-end;
+  color: var(--main-white);
+  font-size: 21px;
+  font-weight: 600;
+}
+
+.priceInfo {
+  color: var(--main-white);
+}
+
+.klm {
+  width: 90px;
+  height: 35px;
+}
+
+.klm path {
+  fill: var(--main-white);
+}
+
+.airFrance {
+  width: 90px;
+  height: 35px;
+}
+
+.airFrance path {
+  fill: var(--main-white);
+}
+
+.aeroflot {
+  width: 90px;
+  height: 35px;
+}
+
+.aeroflot path {
+  fill: var(--main-white);
+}
+
+.aeroflot polygon {
+  fill: var(--main-white);
+}
+
+.tk {
+  width: 90px;
+  height: 35px;
+}
+
+.tk path {
+  fill: var(--main-white);
+}
+
+.airplane {
+  width: 90px;
+  height: 35px;
+}
+
+.airplane path {
+  fill: var(--main-white);
+}

@@ -1,0 +1,14 @@
+.mainWrapper {
+  min-width: 635px;
+}
+
+.btn {
+  color: var(--main-white);
+  display: block;
+  margin: 0 auto;
+  background-color: var(--main-orange);
+  width: 100%;
+  border-radius: inherit;
+  padding: 15px;
+  margin-bottom: 30px;
+}

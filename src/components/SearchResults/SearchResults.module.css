@@ -1,0 +1,15 @@
+.showMoreBtn {
+  margin: 0 auto;
+  border: 1px solid var(--black);
+  background-color: var(--light-gray);
+  border-radius: 0;
+  font-size: 16px;
+  min-width: 255px;
+  align-self: center;
+  cursor: pointer;
+}
+
+.wrapperSearchResult {
+  display: flex;
+  flex-direction: column;
+}

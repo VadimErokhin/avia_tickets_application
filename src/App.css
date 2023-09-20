@@ -1,0 +1,13 @@
+:root {
+  --main-blue: #0087c9;
+  --main-white: #fff;
+  --main-orange: #ffb168;
+  --gray: #a2a2a2;
+  --light-gray: #f1f1f1;
+  --black: #000;
+}
+
+.wrapper {
+display: flex;
+width: 1200px;
+}
