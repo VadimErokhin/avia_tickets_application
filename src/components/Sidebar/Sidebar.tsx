@@ -1,5 +1,9 @@
-import { CurrentFilter, PriceFilterValue } from "../../hooks/useFilter";
-import { AirlineCodes, SortTypes } from "../../types";
+import {
+  CurrentFilter,
+  PriceFilterValue,
+  TransferFilter,
+} from "../../hooks/useFilter";
+import { AirlineCodes, FilterTypes, FilterValue, SortTypes } from "../../types";
 import { AviaCompanyFilter } from "./AviaCompanyFilter/AviaCompanyFilter";
 import { Filter } from "./Filter/Filter";
 import { PriceFilter } from "./PriceFilter/PriceFilter";
@@ -12,9 +16,12 @@ interface SidebarProps {
   currentSort: SortTypes;
   filter: (
     type: CurrentFilter,
-    value?: PriceFilterValue | AirlineCodes
+    value?: FilterValue
   ) => void;
-  currentFilter: CurrentFilter;
+  filterTransfer: TransferFilter;
+  filterPrice: PriceFilterValue | null;
+  filterAirline: AirlineCodes | null;
+
 }
 
 export function Sidebar(props: SidebarProps) {
@@ -25,16 +32,19 @@ export function Sidebar(props: SidebarProps) {
       </SidebarItem>
 
       <SidebarItem title="Фильтровать">
-        <Filter currentFilter={props.currentFilter} filter={props.filter} />
+        <Filter
+          filterTransfer={props.filterTransfer}
+          filter={props.filter}
+        />
       </SidebarItem>
 
       <SidebarItem title="Цена">
-        <PriceFilter filter={props.filter} />
+        <PriceFilter filterPrice={props.filterPrice} filter={props.filter} />
       </SidebarItem>
 
       <SidebarItem title="Авиакомпании">
         <AviaCompanyFilter
-          currentFilter={props.currentFilter}
+          filterAirline={props.filterAirline}
           filter={props.filter}
         />
       </SidebarItem>

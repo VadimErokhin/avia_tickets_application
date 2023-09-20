@@ -1,27 +1,27 @@
-import { CurrentFilter } from "../../../hooks/useFilter";
-import { FilterTypes } from "../../../types";
+import { CurrentFilter, TransferFilter } from "../../../hooks/useFilter";
+import { FilterTypes, FilterValue, TransferTypes } from "../../../types";
 import style from "./Filter.module.css";
 
 interface FilterProps {
-  filter: (type: CurrentFilter) => void;
-  currentFilter: CurrentFilter;
+  filter: (type: CurrentFilter, value: FilterValue) => void;
+  filterTransfer: TransferFilter;
 }
 
 export function Filter(props: FilterProps) {
   function handleOneTransfer() {
-    if (props.currentFilter === FilterTypes.OneTransfer) {
-      props.filter(null);
+    if (props.filterTransfer === TransferTypes.OneTransfer) {
+      props.filter(FilterTypes.Transfer, null);
       return;
     }
-    props.filter(FilterTypes.OneTransfer);
+    props.filter(FilterTypes.Transfer, TransferTypes.OneTransfer);
   }
 
   function handleNoTransfer() {
-    if (props.currentFilter === FilterTypes.NoTransfer) {
-      props.filter(null);
+    if (props.filterTransfer === TransferTypes.NoTransfer) {
+      props.filter(FilterTypes.Transfer, null);
       return;
     }
-    props.filter(FilterTypes.NoTransfer);
+    props.filter(FilterTypes.Transfer, TransferTypes.NoTransfer);
   }
 
   return (
@@ -30,8 +30,8 @@ export function Filter(props: FilterProps) {
         <input
           onChange={handleOneTransfer}
           type="checkbox"
-          value={FilterTypes.OneTransfer}
-          checked={props.currentFilter === FilterTypes.OneTransfer}
+          value={TransferTypes.OneTransfer}
+          checked={props.filterTransfer === TransferTypes.OneTransfer}
         />
         -1 пересадка
       </label>
@@ -39,8 +39,8 @@ export function Filter(props: FilterProps) {
         <input
           onChange={handleNoTransfer}
           type="checkbox"
-          value={FilterTypes.NoTransfer}
-          checked={props.currentFilter === FilterTypes.NoTransfer}
+          value={TransferTypes.NoTransfer}
+          checked={props.filterTransfer === TransferTypes.NoTransfer}
         />
         - без пересадок
       </label>

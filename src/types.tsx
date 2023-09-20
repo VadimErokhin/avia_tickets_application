@@ -1,3 +1,5 @@
+import { PriceFilterValue } from "./hooks/useFilter";
+
 export interface PriceValue {
   amount: string;
   currency: string;
@@ -162,9 +164,15 @@ export enum SortTypes {
   Duration = "Duration",
 }
 
-export enum FilterTypes {
+export enum TransferTypes {
   OneTransfer = "OneTransfer",
   NoTransfer = "NoTransfer",
+}
+
+export enum FilterTypes {
+  Transfer = "Transfer",
   Price = "Price",
   Airline = "Airline",
 }
+
+export type FilterValue = PriceFilterValue | AirlineCodes | null | TransferTypes

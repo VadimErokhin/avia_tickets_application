@@ -5,9 +5,9 @@ import style from "./AviaCompanyFilter.module.css";
 interface AviaCompanyFilterProps {
   filter: (
     type: CurrentFilter,
-    value?: PriceFilterValue | AirlineCodes
+    value?: PriceFilterValue | AirlineCodes | null
   ) => void;
-  currentFilter: CurrentFilter;
+  filterAirline: AirlineCodes | null;
 }
 
 const companyNames: Partial<Record<AirlineCodes, string>> = {
@@ -22,8 +22,8 @@ export function AviaCompanyFilter(props: AviaCompanyFilterProps) {
 
   function handelAirlineCode(e: React.ChangeEvent<HTMLInputElement>) {
     const choosenCode = e.currentTarget.value as AirlineCodes;
-    if (props.currentFilter === choosenCode) {
-      props.filter(null);
+    if (props.filterAirline === choosenCode) {
+      props.filter(FilterTypes.Airline, null);
       return;
     }
 
@@ -38,7 +38,7 @@ export function AviaCompanyFilter(props: AviaCompanyFilterProps) {
             onChange={handelAirlineCode}
             type="checkbox"
             value={code}
-            checked={props.currentFilter === code}
+            checked={props.filterAirline === code}
           />
           -{companyNames[code]}
         </label>

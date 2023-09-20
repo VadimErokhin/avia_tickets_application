@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import { AirlineCodes, SearchResponse, SortTypes } from "./types";
+import { SearchResponse, SortTypes } from "./types";
 import SearchResults from "./components/SearchResults/SearchResults";
 import { Sidebar } from "./components/Sidebar/Sidebar";
 import { usePagination } from "./hooks/usePagination";
 import { useSort } from "./hooks/useSort";
-import { CurrentFilter, PriceFilterValue, useFilter } from "./hooks/useFilter";
+import { useFilter } from "./hooks/useFilter";
 import "./App.css";
 
 function App() {
   const [data, setData] = useState<SearchResponse | null>(null);
   const { visibleResults, handleNextPage, setFirstPage } = usePagination();
   const { sort, currentSort } = useSort();
-  const { filter, currentFilter, filtredItems, filterTransfer } = useFilter();
+  const { filter, filtredItems, filterTransfer, filterPrice, filterAirline } = useFilter(data);
 
   function loadMore() {
     if (!data) return;
@@ -24,14 +24,11 @@ function App() {
     setFirstPage(filtredItems || data.result.flights);
   }
 
-  function handleFilter(
-    type: CurrentFilter,
-    value?: PriceFilterValue | AirlineCodes
-  ) {
+  useEffect(() => {
     if (!data) return;
-    const filtredResults = filter(type, data.result.flights, value);
-    setFirstPage(filtredResults || data.result.flights);
-  }
+
+    setFirstPage(!filtredItems ? data.result.flights : filtredItems);
+  }, [filtredItems, data])
 
   useEffect(() => {
     fetch("./flights.json").then((res) =>
@@ -47,10 +44,11 @@ function App() {
     <div className="wrapper">
       <Sidebar
         filterTransfer={filterTransfer}
-        filter={handleFilter}
+        filterPrice={filterPrice}
+        filterAirline={filterAirline}
+        filter={filter}
         currentSort={currentSort}
         sortMethod={handleSort}
-        currentFilter={currentFilter}
       />
       {visibleResults && (
         <SearchResults handleNextPage={loadMore} flights={visibleResults} />

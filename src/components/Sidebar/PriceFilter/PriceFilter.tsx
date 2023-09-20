@@ -4,6 +4,7 @@ import { AirlineCodes, FilterTypes } from "../../../types";
 import style from "./PriceFilter.module.css";
 
 interface PriceFilterProps {
+  filterPrice: PriceFilterValue | null;
   filter: (
     type: CurrentFilter,
     value?: PriceFilterValue | AirlineCodes
@@ -11,8 +12,8 @@ interface PriceFilterProps {
 }
 
 export function PriceFilter(props: PriceFilterProps) {
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
+  const [minPrice, setMinPrice] = useState(() => props.filterPrice && props.filterPrice.min || "");
+  const [maxPrice, setMaxPrice] = useState(() => props.filterPrice && props.filterPrice.max || '');
 
   const formattedValue = useMemo<PriceFilterValue>(
     () => ({

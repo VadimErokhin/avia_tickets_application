@@ -1,55 +1,70 @@
-import { useState } from "react";
-import { AirlineCodes, FilterTypes, Flight } from "../types";
+import { useEffect, useState } from "react";
+import { AirlineCodes, FilterTypes, FilterValue, Flight, SearchResponse, TransferTypes } from "../types";
 
 export interface PriceFilterValue {
   min?: string;
   max?: string;
 }
 
-export type CurrentFilter = FilterTypes | null | AirlineCodes;
-export type TransferFilter = FilterTypes.NoTransfer | FilterTypes.OneTransfer | null
+export type CurrentFilter = FilterTypes | AirlineCodes | TransferFilter | null;
+export type TransferFilter = TransferTypes | null
 
-export function useFilter() {
-  const [currentFilter, setCurrentFilter] = useState<CurrentFilter>(null);
+export function useFilter(data: SearchResponse | null) {
   const [filtredItems, setFiltredItems] = useState<Flight[] | null>(null);
+
+  const [filterTransfer, setFilterTransfer] = useState<TransferTypes | null>(null);
+  const [filterPrice, setFilterPrice] = useState<PriceFilterValue | null>(null);
+  const [filterAirline, setFilterAirline] = useState<AirlineCodes | null>(null);
+
+  const [filtersToApply, setFiltersToApply] = useState<CurrentFilter[]>([]);
+
+  useEffect(() => {
+    setFiltersToApply(() => {
+      const newState = []
+
+      if (filterTransfer) newState.push(FilterTypes.Transfer)
+      if (filterAirline) newState.push(FilterTypes.Airline)
+      if (filterPrice) newState.push(FilterTypes.Price)
+      
+      return newState;
+    })
+  }, [filterTransfer, filterPrice, filterAirline])
+
+  useEffect(() => {
+    if (!data || !data.result.flights.length) return;
+
+    let filteredItems: null | Flight[] = null;
+
+    filtersToApply.forEach((filterType: CurrentFilter) => {
+      if (filterType === FilterTypes.Transfer && filterTransfer) {
+        filteredItems = filterByTransfers(filteredItems || data.result.flights, filterTransfer)
+      }
+      if (filterType === FilterTypes.Price && filterPrice) {
+        filteredItems = filterByPrice(filteredItems || data.result.flights, filterPrice)
+      }
+      if (filterType === FilterTypes.Airline && filterAirline) {
+        filteredItems = filterByAirline(filteredItems || data.result.flights, filterAirline)
+      }
+    })
+
+    setFiltredItems(filteredItems);
+  }, [filtersToApply])
 
   function filter(
     type: CurrentFilter,
-    data: Flight[],
-    value?: PriceFilterValue | AirlineCodes
-  ): Flight[] | null {
-    setCurrentFilter(type);
-
-    if (type === FilterTypes.NoTransfer) {
-      const results = filterByTransfers(data, 0);
-      setFiltredItems(results);
-      return results;
-    }
-
-    if (type === FilterTypes.OneTransfer) {
-      const results = filterByTransfers(data, 1);
-      setFiltredItems(results);
-      return results;
+    value?: FilterValue
+  ) {
+    if (type === FilterTypes.Transfer) {
+      setFilterTransfer(value as TransferTypes);
     }
 
     if (type === FilterTypes.Price) {
-      const results = filterByPrice(data, value as PriceFilterValue);
-      setFiltredItems(results);
-      return results;
+      setFilterPrice(value as PriceFilterValue)
     }
 
     if (type === FilterTypes.Airline) {
-      setCurrentFilter(value as AirlineCodes);
-      const results = filterByAirline(data, value as AirlineCodes);
-      setFiltredItems(results);
-      return results;
+      setFilterAirline(value as AirlineCodes)
     }
-
-    if (type === null) {
-      setFiltredItems(null);
-    }
-
-    return null;
   }
 
   function filterByAirline(data: Flight[], value: AirlineCodes) {
@@ -57,25 +72,31 @@ export function useFilter() {
   }
 
   function filterByPrice(data: Flight[], { min, max }: PriceFilterValue) {
+    if (!min && !max) return data;
+
     if (min && max) {
       return data.filter(
         (el) =>
           Number(el.flight.price.total.amount) > Number(min) &&
           Number(el.flight.price.total.amount) < Number(max)
       );
-    } else if (min) {
+    }
+    
+    if (min) {
       return data.filter(
         (el) => Number(el.flight.price.total.amount) > Number(min)
       );
-    } else if (max) {
-      return data.filter(
-        (el) => Number(el.flight.price.total.amount) < Number(max)
-      );
-    }
-    return null;
+    } 
+
+
+    return data.filter((el) => Number(el.flight.price.total.amount) < Number(max))
   }
 
-  function filterByTransfers(data: Flight[], transfers: number) {
+  function filterByTransfers(data: Flight[], type: TransferTypes | null) {
+    if (!type) return data;
+
+    const transfers = type === TransferTypes.NoTransfer ? 0 : 1;
+
     return data.filter((flight) => {
       const hasOneTransfers = flight.flight.legs.every(
         (leg) => leg.segments.length === transfers + 1
@@ -85,7 +106,9 @@ export function useFilter() {
   }
 
   return {
-    currentFilter,
+    filterTransfer,
+    filterPrice,
+    filterAirline,
     filter,
     filtredItems,
   };
