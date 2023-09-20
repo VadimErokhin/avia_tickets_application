@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AirlineCodes, FilterTransferTypes, FilterTypes, Flight } from "../types";
+import { AirlineCodes, FilterTypes, Flight } from "../types";
 
 export interface PriceFilterValue {
   min?: string;
@@ -12,7 +12,6 @@ export type TransferFilter = FilterTypes.NoTransfer | FilterTypes.OneTransfer | 
 export function useFilter() {
   const [currentFilter, setCurrentFilter] = useState<CurrentFilter>(null);
   const [filtredItems, setFiltredItems] = useState<Flight[] | null>(null);
-  const [filterTransfer, setFilterTransfer] = useState<TransferFilter>(null);
 
   function filter(
     type: CurrentFilter,
@@ -22,14 +21,12 @@ export function useFilter() {
     setCurrentFilter(type);
 
     if (type === FilterTypes.NoTransfer) {
-      setFilterTransfer(FilterTypes.NoTransfer)
       const results = filterByTransfers(data, 0);
       setFiltredItems(results);
       return results;
     }
 
     if (type === FilterTypes.OneTransfer) {
-      setFilterTransfer(FilterTypes.OneTransfer)
       const results = filterByTransfers(data, 1);
       setFiltredItems(results);
       return results;
@@ -91,6 +88,5 @@ export function useFilter() {
     currentFilter,
     filter,
     filtredItems,
-    filterTransfer
   };
 }

@@ -32,8 +32,8 @@ export function AviaCompanyFilter(props: AviaCompanyFilterProps) {
 
   return (
     <form className={style.form}>
-      {airlines.map((code) => (
-        <label>
+      {airlines.map((code, index) => (
+        <label key={index}>
           <input
             onChange={handelAirlineCode}
             type="checkbox"

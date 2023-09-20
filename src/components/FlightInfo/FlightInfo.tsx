@@ -17,8 +17,6 @@ interface FlightInfoProps {
 }
 
 export function FlightInfo(props: FlightInfoProps) {
-  // const[segment, setSegment] = useState<LegSegment | null>(null)
-
   const segment = useMemo(() => {
     const result = props.leg.segments[0];
     if (props.leg.segments.length > 1) {

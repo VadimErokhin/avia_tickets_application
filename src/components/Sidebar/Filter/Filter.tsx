@@ -1,15 +1,15 @@
-import { CurrentFilter, TransferFilter } from "../../../hooks/useFilter";
+import { CurrentFilter } from "../../../hooks/useFilter";
 import { FilterTypes } from "../../../types";
 import style from "./Filter.module.css";
 
 interface FilterProps {
   filter: (type: CurrentFilter) => void;
-  filterTransfer: TransferFilter;
+  currentFilter: CurrentFilter;
 }
 
 export function Filter(props: FilterProps) {
   function handleOneTransfer() {
-    if (props.filterTransfer === FilterTypes.OneTransfer) {
+    if (props.currentFilter === FilterTypes.OneTransfer) {
       props.filter(null);
       return;
     }
@@ -17,7 +17,7 @@ export function Filter(props: FilterProps) {
   }
 
   function handleNoTransfer() {
-    if (props.filterTransfer === FilterTypes.NoTransfer) {
+    if (props.currentFilter === FilterTypes.NoTransfer) {
       props.filter(null);
       return;
     }
@@ -31,7 +31,7 @@ export function Filter(props: FilterProps) {
           onChange={handleOneTransfer}
           type="checkbox"
           value={FilterTypes.OneTransfer}
-          checked={props.filterTransfer === FilterTypes.OneTransfer}
+          checked={props.currentFilter === FilterTypes.OneTransfer}
         />
         -1 пересадка
       </label>
@@ -40,7 +40,7 @@ export function Filter(props: FilterProps) {
           onChange={handleNoTransfer}
           type="checkbox"
           value={FilterTypes.NoTransfer}
-          checked={props.filterTransfer === FilterTypes.NoTransfer}
+          checked={props.currentFilter === FilterTypes.NoTransfer}
         />
         - без пересадок
       </label>
